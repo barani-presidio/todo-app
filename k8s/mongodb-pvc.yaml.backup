@@ -1,0 +1,28 @@
+# This file is kept as a backup reference
+# MongoDB is now configured to use ephemeral storage (emptyDir)
+# If you need persistent storage, you can use this PVC configuration
+# and update mongodb-deployment.yaml to use it instead of emptyDir
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+  namespace: todo-app
+  labels:
+    app: mongodb
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+
+# To use this PVC:
+# 1. Apply this file: kubectl apply -f mongodb-pvc.yaml.backup
+# 2. Update mongodb-deployment.yaml volumes section to:
+#    volumes:
+#    - name: mongodb-storage
+#      persistentVolumeClaim:
+#        claimName: mongodb-pvc
+
