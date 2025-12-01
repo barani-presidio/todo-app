@@ -1,5 +1,11 @@
 # MERN TODO Application with Kubernetes Deployment
 
+[![CI/CD Pipeline](https://github.com/barani-presidio/todo-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/barani-presidio/todo-app/actions/workflows/ci-cd.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/docker-ready-blue)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/kubernetes-ready-326CE5)](https://kubernetes.io/)
+
 A full-stack TODO application built with MongoDB, Express.js, React, and Node.js (MERN), designed for deployment on Kubernetes.
 
 ## Features
