@@ -26,15 +26,28 @@ Configure these secrets in your GitHub repository:
    - Give it a name like "github-actions"
    - Copy the token value
 
-### Kubernetes Configuration
+### AWS EKS Configuration (for Kubernetes deployment)
 
-3. **KUBE_CONFIG**
-   - Base64 encoded kubeconfig file
-   - Get your kubeconfig:
-     ```bash
-     cat ~/.kube/config | base64
-     ```
-   - Copy the entire output and paste as secret value
+3. **AWS_ACCESS_KEY_ID**
+   - Your AWS access key ID
+   - Create in AWS Console: IAM → Users → Security credentials → Create access key
+
+4. **AWS_SECRET_ACCESS_KEY**
+   - Your AWS secret access key
+   - Shown only once when creating the access key
+
+5. **AWS_REGION**
+   - Your AWS region where EKS cluster is located
+   - Example: `us-east-1`, `us-west-2`, etc.
+
+6. **EKS_CLUSTER_NAME**
+   - Your EKS cluster name
+   - Example: `todo-app-cluster`
+
+**Note:** The IAM user needs these permissions:
+- `eks:DescribeCluster`
+- `eks:ListClusters`
+- Kubernetes RBAC permissions to update deployments
 
 ## Setup Steps
 
