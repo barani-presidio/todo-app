@@ -199,7 +199,9 @@ jobs:
 
       - name: Configure kubectl for EKS
         run: |
+          echo "fetching kubeconfig..."
           aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+          echo "fetching namespaces..."
           kubectl get ns
       - name: Update deployment images
         run: |
