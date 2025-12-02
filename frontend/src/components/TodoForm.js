@@ -33,7 +33,7 @@ function TodoForm({ onAddTodo }) {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="What needs to be done?"
+          placeholder="What needs to be done?(Add more details here...)"
           className="title-input"
           maxLength="200"
           required
