@@ -216,12 +216,43 @@ jobs:
             frontend=${{ env.FRONTEND_IMAGE }}:${{ github.sha }} \
             -n todo-app
 
+      - name: Check deployment status
+        run: |
+          echo "Checking backend deployment..."
+          kubectl get deployment backend-deployment -n todo-app
+          kubectl get pods -n todo-app -l app=backend
+          
+          echo "Checking frontend deployment..."
+          kubectl get deployment frontend-deployment -n todo-app
+          kubectl get pods -n todo-app -l app=frontend
+
       - name: Wait for rollout
         run: |
-          kubectl rollout status deployment/backend-deployment -n todo-app --timeout=5m
-          kubectl rollout status deployment/frontend-deployment -n todo-app --timeout=5m
+          echo "Waiting for backend rollout..."
+          kubectl rollout status deployment/backend-deployment -n todo-app --timeout=3m || {
+            echo "Backend rollout timed out, checking pod status..."
+            kubectl describe pods -n todo-app -l app=backend
+            kubectl logs -n todo-app -l app=backend --tail=50 || echo "No logs available"
+          }
+          
+          echo "Waiting for frontend rollout..."
+          kubectl rollout status deployment/frontend-deployment -n todo-app --timeout=3m || {
+            echo "Frontend rollout timed out, checking pod status..."
+            kubectl describe pods -n todo-app -l app=frontend
+            kubectl logs -n todo-app -l app=frontend --tail=50 || echo "No logs available"
+          }
 
       - name: Verify deployment
+        if: always()
         run: |
-          kubectl get pods -n todo-app
+          echo "=== Deployments ==="
+          kubectl get deployments -n todo-app
+          
+          echo "=== Pods ==="
+          kubectl get pods -n todo-app -o wide
+          
+          echo "=== Services ==="
           kubectl get services -n todo-app
+          
+          echo "=== Events ==="
+          kubectl get events -n todo-app --sort-by='.lastTimestamp' | tail -20

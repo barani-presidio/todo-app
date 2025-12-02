@@ -21,7 +21,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
       - name: frontend
-        image: 877969058937.dkr.ecr.us-east-1.amazonaws.com/blog/blog-ex-client:latest
+        image: brampresidio/todo-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
