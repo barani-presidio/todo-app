@@ -185,12 +185,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-session-name: GitHubActions-${{ github.run_id }}
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     #role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+      #     #aws-region: ${{ secrets.AWS_REGION }}
+      #     #role-session-name: GitHubActions-${{ github.run_id }}
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
@@ -200,6 +200,9 @@ jobs:
       - name: Configure kubectl for EKS
         run: |
           echo "fetching kubeconfig..."
+          export AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}
+          export AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}}
+          export AWS_SESSION_TOKEN=${{secrets.AWS_SESSION_TOKEN}}
           aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
           echo "fetching namespaces..."
           export KUBECONFIG=/home/runner/.kube/config
