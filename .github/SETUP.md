@@ -28,26 +28,43 @@ Configure these secrets in your GitHub repository:
 
 ### AWS EKS Configuration (for Kubernetes deployment)
 
-3. **AWS_ACCESS_KEY_ID**
-   - Your AWS access key ID
-   - Create in AWS Console: IAM → Users → Security credentials → Create access key
+This workflow uses **OIDC (OpenID Connect)** for secure AWS authentication without storing credentials.
 
-4. **AWS_SECRET_ACCESS_KEY**
-   - Your AWS secret access key
-   - Shown only once when creating the access key
+3. **AWS_ROLE_ARN**
+   - Your IAM role ARN for GitHub Actions
+   - Example: `arn:aws:iam::123456789012:role/github-actions-role`
+   - See setup instructions below
 
-5. **AWS_REGION**
+4. **AWS_REGION**
    - Your AWS region where EKS cluster is located
    - Example: `us-east-1`, `us-west-2`, etc.
 
-6. **EKS_CLUSTER_NAME**
+5. **EKS_CLUSTER_NAME**
    - Your EKS cluster name
    - Example: `todo-app-cluster`
 
-**Note:** The IAM user needs these permissions:
-- `eks:DescribeCluster`
-- `eks:ListClusters`
-- Kubernetes RBAC permissions to update deployments
+#### Setting up AWS OIDC for GitHub Actions:
+
+1. **Create OIDC Identity Provider in AWS:**
+   - Go to IAM → Identity providers → Add provider
+   - Provider type: OpenID Connect
+   - Provider URL: `https://token.actions.githubusercontent.com`
+   - Audience: `sts.amazonaws.com`
+
+2. **Create IAM Role:**
+   - Go to IAM → Roles → Create role
+   - Trusted entity type: Web identity
+   - Identity provider: `token.actions.githubusercontent.com`
+   - Audience: `sts.amazonaws.com`
+   - Add condition: `token.actions.githubusercontent.com:sub` = `repo:barani-presidio/todo-app:*`
+
+3. **Attach Policies to Role:**
+   - `AmazonEKSClusterPolicy` (or custom policy with `eks:DescribeCluster`)
+   - Custom policy for EKS access
+
+4. **Copy Role ARN:**
+   - After creating, copy the role ARN
+   - Add it as `AWS_ROLE_ARN` secret in GitHub
 
 ## Setup Steps
 
